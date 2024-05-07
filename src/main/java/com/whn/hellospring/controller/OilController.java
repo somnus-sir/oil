@@ -25,6 +25,8 @@ public class OilController {
     @Autowired
     OilService service;
 
+
+
     /**
      * 市场油价
      */
@@ -51,7 +53,7 @@ public class OilController {
             double numTotal = service.getNumTotal(request.getCustomer_id());
             double intervalMileageTotal = service.getIntervalMileageTotal(request.getCustomer_id());
             double oilWear = numTotal * 100.0 / intervalMileageTotal;
-            String s = StringUtil.INSTANCE.doubleToString1(oilWear);
+            String s = StringUtil.doubleToString1(oilWear);
             Status status = new Status(StateMessage.SUCCESS, "success");
             status.setData("wear", s);
             return status;

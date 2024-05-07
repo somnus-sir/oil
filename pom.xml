@@ -18,6 +18,7 @@
 	<properties>
 		<java.version>1.8</java.version>
         <kotlin.version>1.3.50</kotlin.version>
+		<docker.image>docker_storage</docker.image>
     </properties>
 
 	<dependencies>
@@ -235,34 +236,46 @@
 
 			<plugin>
 				<groupId>com.spotify</groupId>
-				<artifactId>docker-maven-plugin</artifactId>
-				<version>1.2.2</version>
-				<executions>
-					<execution>
-						<id>build-image</id>
-						<phase>package</phase>
-						<goals>
-							<goal>build</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.3.6</version>
 				<configuration>
-					<imageName>testc</imageName>
-					<forceTags>true</forceTags><!-- 每次新的构建上覆盖镜像tags -->
-					<imageTags>
-						<imageTag>111</imageTag> <!-- -DpushImageTags没有-DdockerImageTags=xxx时,默认推送这个版本 -->
-					</imageTags>
-					<baseImage>openjdk:8-jdk-alpine</baseImage>
-					<entryPoint>["sh", "-c",  "java $JAVA_OPTIONS -jar /${project.build.finalName}.jar"]</entryPoint>
-					<resources>
-						<resource>
-							<targetPath>/</targetPath>
-							<directory>${project.build.directory}</directory>
-							<include>${project.build.finalName}.jar</include>
-						</resource>
-					</resources>
+					<repository>${docker.image}/${project.artifactId}</repository>
+					<buildArgs>
+						<JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+					</buildArgs>
 				</configuration>
 			</plugin>
+
+<!--			<plugin>-->
+<!--				<groupId>com.spotify</groupId>-->
+<!--				<artifactId>docker-maven-plugin</artifactId>-->
+<!--				<version>1.2.2</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>build-image</id>-->
+<!--						<phase>package</phase>-->
+<!--						<goals>-->
+<!--							<goal>build</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--				<configuration>-->
+<!--					<imageName>testc</imageName>-->
+<!--					<forceTags>true</forceTags>&lt;!&ndash; 每次新的构建上覆盖镜像tags &ndash;&gt;-->
+<!--					<imageTags>-->
+<!--						<imageTag>111</imageTag> &lt;!&ndash; -DpushImageTags没有-DdockerImageTags=xxx时,默认推送这个版本 &ndash;&gt;-->
+<!--					</imageTags>-->
+<!--					<baseImage>openjdk:8-jdk-alpine</baseImage>-->
+<!--					<entryPoint>["sh", "-c",  "java $JAVA_OPTIONS -jar /${project.build.finalName}.jar"]</entryPoint>-->
+<!--					<resources>-->
+<!--						<resource>-->
+<!--							<targetPath>/</targetPath>-->
+<!--							<directory>${project.build.directory}</directory>-->
+<!--							<include>${project.build.finalName}.jar</include>-->
+<!--						</resource>-->
+<!--					</resources>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
         </plugins>
 	</build>
 
